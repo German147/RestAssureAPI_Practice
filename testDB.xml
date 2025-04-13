@@ -1,0 +1,7 @@
+<suite name="SuiteDePruebas">
+  <test name="Test1">
+    <classes>
+      <class name="org.germanPractice.Test_dbAgainstAPI" />
+    </classes>
+  </test>
+</suite>
