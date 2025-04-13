@@ -1,0 +1,11 @@
+<suite name="SuiteDePruebas" verbose="1" parallel="false">
+
+  <listeners>
+    <listener class-name="org.testng.reporters.XMLReporter"/>
+  </listeners>
+  <test name="Test1">
+    <classes>
+      <class name="org.germanPractice.Test_dbAgainstAPI" />
+    </classes>
+  </test>
+</suite>
