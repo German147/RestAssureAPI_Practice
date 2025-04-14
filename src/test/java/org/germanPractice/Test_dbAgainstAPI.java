@@ -59,11 +59,27 @@ public class Test_dbAgainstAPI {
         User userAPI = userService.getUserFromApi(userId);
         User dbUser = userService.getUserFromDb(1);
 
-        Assert.assertEquals(userAPI.getId(),dbUser.getId(),"User ID mismatch");
-        Assert.assertEquals(userAPI.getName(),dbUser.getName(),"User name mismatch");
-        Assert.assertEquals(userAPI.getEmail(),dbUser.getEmail(),"User Email mismatch");
+        Assert.assertEquals(userAPI.getId(), dbUser.getId(), "User ID mismatch");
+        Assert.assertEquals(userAPI.getName(), dbUser.getName(), "User name mismatch");
+        Assert.assertEquals(userAPI.getEmail(), dbUser.getEmail(), "User Email mismatch");
     }
 
+    @Test
+    public void testUserAddressMatchesApiAndDb() {
+        int userId = 1;
+
+        //  1. Obtener usuario desde la API
+        User apiUser = userService.getUserFromApi(userId);
+
+        //  2. Obtener usuario desde la DB (ahora incluye Address)
+        User dbUser = userService.getUserFromDb(userId);
+
+        //  3. Asserts de los datos de address
+        Assert.assertEquals(apiUser.getAddress_id().getStreet(), dbUser.getAddress_id().getStreet(), "Street does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getSuite(), dbUser.getAddress_id().getSuite(), "Suite does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getCity(), dbUser.getAddress_id().getCity(), "City does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getZipcode(), dbUser.getAddress_id().getZipcode(), "Zipcode does not match");
+    }
 
     public static void main(String[] args) {
 

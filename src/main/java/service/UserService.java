@@ -4,6 +4,8 @@ import database.DBConnection;
 import exceptions.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import model.Address;
+import model.Geo;
 import model.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +19,6 @@ import java.sql.*;
 import static io.restassured.RestAssured.given;
 
 public class UserService {
-
     public User getUserFromApi(int userId) {
         try {
             RestAssured.baseURI = "https://jsonplaceholder.typicode.com/users/" + userId;
@@ -30,40 +31,79 @@ public class UserService {
                     .extract()
                     .response();
 
+            Geo geo = new Geo(
+                    response.jsonPath().getString("address.geo.lat"),
+                    response.jsonPath().getString("address.geo.lng")
+            );
+
+            Address address = new Address(
+                    response.jsonPath().getString("address.street"),
+                    response.jsonPath().getString("address.suite"),
+                    response.jsonPath().getString("address.city"),
+                    response.jsonPath().getString("address.zipcode"),
+                    geo
+            );
+
             return new User(
                     response.jsonPath().getInt("id"),
                     response.jsonPath().getString("name"),
                     response.jsonPath().getString("username"),
-                    response.jsonPath().getString("email"));
+                    response.jsonPath().getString("email"),
+                    address
+            );
+
         } catch (ApiException e) {
-                throw new ApiException("User not found due to Server is down or URL is wrong");
+            throw new ApiException("User not found due to Server is down or URL is wrong");
         }
     }
+
 
     public User getUserFromDb(int id) {
         User user = null;
 
         try (Connection conn = DBConnection.getInstance()) {
-            String query = "SELECT * FROM users WHERE id = " + id;
+            String query = """
+            SELECT u.id AS user_id, u.name, u.username, u.email, u.address_id,
+                   a.street, a.suite, a.city, a.zipcode,
+                   g.lat, g.lng
+            FROM users u
+            JOIN addresses a ON u.address_id = a.id
+            JOIN geo g ON a.geo_id = g.id
+            WHERE u.id = """ + id;
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
+                Geo geo = new Geo(
+                        rs.getString("lat"),
+                        rs.getString("lng")
+                );
+
+                Address address = new Address(
+                        rs.getString("street"),
+                        rs.getString("suite"),
+                        rs.getString("city"),
+                        rs.getString("zipcode"),
+                        geo
+                );
+
                 user = new User(
-                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("username"),
-                        rs.getString("email")
+                        rs.getString("email"),
+                        address
                 );
             }
 
         } catch (SQLException e) {
-            throw new GetUserException("Failed to get user by id");
+            throw new GetUserException("Failed to get user by id"); // Pass cause for debugging
         }
 
         return user;
     }
+
+
 
     public void fetchAndInsertUsers() {
         try {
