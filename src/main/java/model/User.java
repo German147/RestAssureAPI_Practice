@@ -48,7 +48,7 @@ public class User {
         this.email = email;
     }
 
-    public Address getAddress() {
+    public Address getAddress_id() {
         return address_id;
     }
 

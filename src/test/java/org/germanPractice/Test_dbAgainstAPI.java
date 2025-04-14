@@ -75,10 +75,10 @@ public class Test_dbAgainstAPI {
         User dbUser = userService.getUserFromDb(userId);
 
         //  3. Asserts de los datos de address
-        Assert.assertEquals(apiUser.getAddress().getStreet(), dbUser.getAddress().getStreet(), "Street does not match");
-        Assert.assertEquals(apiUser.getAddress().getSuite(), dbUser.getAddress().getSuite(), "Suite does not match");
-        Assert.assertEquals(apiUser.getAddress().getCity(), dbUser.getAddress().getCity(), "City does not match");
-        Assert.assertEquals(apiUser.getAddress().getZipcode(), dbUser.getAddress().getZipcode(), "Zipcode does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getStreet(), dbUser.getAddress_id().getStreet(), "Street does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getSuite(), dbUser.getAddress_id().getSuite(), "Suite does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getCity(), dbUser.getAddress_id().getCity(), "City does not match");
+        Assert.assertEquals(apiUser.getAddress_id().getZipcode(), dbUser.getAddress_id().getZipcode(), "Zipcode does not match");
     }
 
     public static void main(String[] args) {
