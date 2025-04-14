@@ -89,7 +89,6 @@ public class UserService {
                 );
 
                 user = new User(
-                        rs.getInt("user_id"),
                         rs.getString("name"),
                         rs.getString("username"),
                         rs.getString("email"),
