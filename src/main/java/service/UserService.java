@@ -63,7 +63,7 @@ public class UserService {
 
         try (Connection conn = DBConnection.getInstance()) {
             String query = """
-            SELECT u.id AS user_id, u.name, u.username, u.email, u.address_id,
+            SELECT u.id AS user_id, u.name, u.username, u.email,
                    a.street, a.suite, a.city, a.zipcode,
                    g.lat, g.lng
             FROM users u
@@ -75,11 +75,13 @@ public class UserService {
             ResultSet rs = stmt.executeQuery(query);
 
             if (rs.next()) {
+                // Create Geo object
                 Geo geo = new Geo(
                         rs.getString("lat"),
                         rs.getString("lng")
                 );
 
+                // Create Address object
                 Address address = new Address(
                         rs.getString("street"),
                         rs.getString("suite"),
@@ -88,7 +90,9 @@ public class UserService {
                         geo
                 );
 
+                // Create User object (make sure constructor includes the ID as first argument)
                 user = new User(
+                        rs.getInt("user_id"),
                         rs.getString("name"),
                         rs.getString("username"),
                         rs.getString("email"),
@@ -97,11 +101,12 @@ public class UserService {
             }
 
         } catch (SQLException e) {
-            throw new GetUserException("Failed to get user by id"); // Pass cause for debugging
+            throw new GetUserException("Failed to get user by id"); // Now passing the cause for better debugging
         }
 
         return user;
     }
+
 
 
 
