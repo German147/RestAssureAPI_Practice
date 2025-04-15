@@ -7,6 +7,8 @@ import io.restassured.response.Response;
 import model.Address;
 import model.Geo;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,6 +21,9 @@ import java.sql.*;
 import static io.restassured.RestAssured.given;
 
 public class UserService {
+
+    private static final Logger logger = LogManager.getLogger(UserService.class);
+
     public User getUserFromApi(int userId) {
         try {
             RestAssured.baseURI = "https://jsonplaceholder.typicode.com/users/" + userId;
@@ -56,7 +61,6 @@ public class UserService {
             throw new ApiException("User not found due to Server is down or URL is wrong");
         }
     }
-
 
     public User getUserFromDb(int id) {
         User user = null;
@@ -106,9 +110,6 @@ public class UserService {
 
         return user;
     }
-
-
-
 
     public void fetchAndInsertUsers() {
         try {
@@ -164,6 +165,7 @@ public class UserService {
             rs.next();
             return rs.getInt("id");
         } catch (SQLException e) {
+            logger.error("The geo was not inserted");
             throw new InsertGeoException("The geo was not inserted");
         }
     }
