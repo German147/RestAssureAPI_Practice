@@ -1,4 +1,4 @@
-package org.germanPractice;
+package trelloPractice;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
