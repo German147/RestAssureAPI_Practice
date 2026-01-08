@@ -18,10 +18,8 @@ public class TrelloPractice {
     public void createBoard() {
 
         RestAssured.baseURI = "https://api.trello.com";
-        String boardName = "My Board Form API" + (int) (Math.random() * 100);
-
+        String boardName = "GermanBoard7" + (int) (Math.random() * 100);
         System.out.println("This is the created Board Name " + boardName);
-
         given().queryParam("key", "66230352ae879578682cf7c7f2cf090a")
                 .queryParam("token", "ATTAfea56e650a3293694d5d8e55991c689732b65d012181c824e19fda5b16d10849E6D52209")
                 .queryParam("name", boardName)
